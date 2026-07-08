@@ -1,0 +1,239 @@
+:root {
+    --granate: #800020;
+    --dorado: #D4AF37;
+    --fondo: #f9f9f9;
+    --texto-oscuro: #333;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--fondo);
+    margin: 0;
+    padding: 20px;
+    color: var(--texto-oscuro);
+}
+
+header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+h1 {
+    color: var(--granate);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-bottom: 3px solid var(--dorado);
+    display: inline-block;
+    padding-bottom: 10px;
+}
+
+/* --- CONTROLES DE FILTRO Y ELECCIÓN --- */
+.controles-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+/* --- ESTILOS DEL BUSCADOR --- */
+#buscador {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 2px solid var(--granate);
+    background-color: white;
+    color: var(--texto-oscuro);
+    font-family: inherit;
+    width: 100%;
+    max-width: 250px;
+}
+
+#buscador:focus {
+    outline: none;
+    border-color: var(--dorado);
+    box-shadow: 0 0 8px rgba(212, 175, 55, 0.4);
+}
+
+select, button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 2px solid var(--granate);
+    background-color: white;
+    color: var(--granate);
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: bold;
+}
+
+button.modo-activo {
+    background-color: var(--granate);
+    color: white;
+}
+
+/* --- ZONA DE ELECCIÓN (EL CUADRO) --- */
+#zona-eleccion {
+    display: none;
+    background-color: #fff;
+    border: 3px solid var(--dorado);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+#zona-eleccion.visible {
+    display: block;
+}
+
+.corte-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.miniatura-corte {
+    width: 80px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+    position: relative;
+}
+
+/* Estilo del botón de eliminar (la X) */
+.btn-eliminar-corte {
+    position: absolute;
+    top: -5px;
+    right: 0px;
+    background-color: var(--granate);
+    color: white;
+    border: 2px solid white;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    font-size: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    z-index: 10;
+}
+
+.btn-eliminar-corte:hover {
+    background-color: red;
+    transform: scale(1.1);
+}
+
+.miniatura-corte:hover {
+    transform: scale(1.1);
+}
+
+.miniatura-corte img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: top;
+    border: 3px solid var(--granate);
+}
+
+.miniatura-corte p {
+    font-size: 0.7rem;
+    margin: 5px 0 0 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.fmv-spot {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 2px dashed var(--dorado);
+}
+
+.fmv-spot img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: top;
+    border: 5px solid var(--dorado);
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.5);
+}
+
+/* --- GRID PRINCIPAL --- */
+#grid-candidatas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.candidata-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(128, 0, 32, 0.1);
+    overflow: hidden;
+    border-top: 5px solid var(--dorado);
+    transition: transform 0.2s ease, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+}
+
+.candidata-card.seleccionable:hover {
+    transform: translateY(-5px);
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4);
+}
+
+.candidata-card.en-corte {
+    opacity: 0.5;
+    filter: grayscale(100%);
+}
+
+.imagen-container {
+    height: 250px;
+    background-color: #eaeaea;
+    overflow: hidden;
+}
+
+.imagen-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.info-container {
+    padding: 20px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.nombre-candidata { margin: 0 0 5px 0; font-size: 1.4rem; color: var(--granate); }
+.falla-texto, .sector-texto { margin: 2px 0; font-size: 0.95rem; color: #666; }
+.falla-texto { font-weight: bold; }
+
+.probabilidad-box {
+    background-color: var(--granate);
+    color: var(--dorado);
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.icono-bellota { width: 24px; height: 24px; fill: var(--dorado); }
+.porcentaje-wrapper { display: flex; flex-direction: column; align-items: flex-start; }
+.numero-probabilidad { font-size: 1.8rem; font-weight: bold; line-height: 1; }
+.label-probabilidad { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.9; }
