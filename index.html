@@ -3,20 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-width=1.0">
-    <title>Calculadora y Cuadro de Elección FMV</title>
+    <title>Calculadora y Cuadro de Elección Fallas</title>
     
-    <!-- Librería externa para exportar la imagen -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    
-    <!-- Enlace al archivo de estilos CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
+    <!-- NUEVO: Barra superior de Usuario / Login -->
+    <div id="auth-bar" class="auth-bar">
+        <div id="user-logged-out">
+            <input type="email" id="auth-email" placeholder="Tu email...">
+            <input type="password" id="auth-password" placeholder="Contraseña...">
+            <button onclick="login()">Entrar</button>
+            <button onclick="registro()">Registrarse</button>
+        </div>
+        <div id="user-logged-in" style="display: none;">
+            <span id="user-email-text">Sesión iniciada</span>
+            <button onclick="logout()" class="btn-logout">Cerrar Sesión</button>
+        </div>
+    </div>
+
     <header>
-        <h1>Probabilidad FMV 2026</h1>
+        <h1 id="titulo-app">Probabilidad FMV 2026</h1>
         <p>Cálculo basado en entrevistas y uso del valenciano</p>
     </header>
+
+    <!-- Selector de categoría y Ranking -->
+    <div class="selector-modo-container">
+        <button id="btn-mayores" class="btn-modo activo" onclick="cambiarCategoria('mayores')">👸 Mayores</button>
+        <button id="btn-infantiles" class="btn-modo" onclick="cambiarCategoria('infantiles')">👧 Infantiles</button>
+        <!-- NUEVO: Botón de Clasificación -->
+        <button id="btn-ranking" class="btn-modo" onclick="toggleClasificacion()" style="border-color: var(--dorado); color: var(--dorado);">🏆 Ranking</button>
+    </div>
+
+    <!-- NUEVO: Zona de Clasificación (Oculta por defecto) -->
+    <div id="zona-clasificacion" style="display: none; background: white; padding: 20px; border-radius: 12px; border: 3px solid var(--dorado); margin-bottom: 30px; text-align: center;">
+        <h2 style="color: var(--color-tema);">Clasificación General (<span id="ranking-modo-texto">Mayores</span>)</h2>
+        <p style="color: #666;">Acierto en Corte: +1 pt | Acierto Fallera Mayor: +5 pts</p>
+        <div id="tabla-ranking-container" style="overflow-x: auto; margin-top: 20px;">
+            <!-- La tabla se generará aquí -->
+        </div>
+    </div>
 
     <div class="controles-container">
         <input type="text" id="buscador" placeholder="Buscar candidata o falla..." oninput="renderizarTarjetas()">
@@ -29,29 +59,25 @@
     </div>
 
     <div id="zona-eleccion">
-        <h2 style="color: var(--granate);">Corte de Honor (Seleccionadas: <span id="contador-corte">0</span>/13)</h2>
-        <div id="corte-grid" class="corte-grid">
-            <!-- Las miniaturas se inyectan por JS -->
-        </div>
+        <h2 style="color: var(--color-tema);"><span id="texto-corte">Corte de Honor</span> (Seleccionadas: <span id="contador-corte">0</span>/13)</h2>
+        <div id="corte-grid" class="corte-grid"></div>
         
         <div class="fmv-spot">
-            <h2 style="color: var(--dorado);">Fallera Mayor de Valencia</h2>
+            <h2 id="titulo-fmv" style="color: var(--dorado);">Fallera Mayor de Valencia</h2>
             <div id="fmv-elegida">
-                <p style="color: #666;">Haz clic en una candidata de la Corte para elegirla FMV</p>
+                <p style="color: #666;">Haz clic en una candidata de la Corte para elegirla</p>
             </div>
         </div>
 
         <div id="botones-exportacion" style="display: none; margin-top: 30px; gap: 15px; justify-content: center;">
+            <button onclick="guardarQuinielaEnNube()" id="btn-guardar-nube" style="background-color: var(--color-tema); color: white; border: none;">💾 Guardar Quiniela Oficial</button>
             <button onclick="compartirWhatsApp()" style="background-color: #25D366; color: white; border: none;">📲 Compartir por WhatsApp</button>
-            <button onclick="descargarImagen()" style="background-color: var(--dorado); color: var(--granate); border: none;">📸 Descargar Quiniela</button>
+            <button onclick="descargarImagen()" style="background-color: var(--dorado); color: var(--color-tema); border: none;">📸 Descargar Quiniela</button>
         </div>
     </div>
 
-    <div id="grid-candidatas">
-        <!-- Las tarjetas principales se inyectan por JS -->
-    </div>
+    <div id="grid-candidatas"></div>
 
-    <!-- Enlace al archivo de lógica JavaScript (siempre al final del body) -->
     <script src="script.js"></script>
 </body>
 </html>

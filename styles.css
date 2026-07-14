@@ -1,5 +1,6 @@
 :root {
-    --granate: #800020;
+    /* Esta variable cambiará entre granate y azul con JavaScript */
+    --color-tema: #800020; 
     --dorado: #D4AF37;
     --fondo: #f9f9f9;
     --texto-oscuro: #333;
@@ -15,16 +16,43 @@ body {
 
 header {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
 h1 {
-    color: var(--granate);
+    color: var(--color-tema);
     text-transform: uppercase;
     letter-spacing: 2px;
     border-bottom: 3px solid var(--dorado);
     display: inline-block;
     padding-bottom: 10px;
+}
+
+/* --- SELECTOR DE MODOS (NUEVO) --- */
+.selector-modo-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.btn-modo {
+    padding: 10px 20px;
+    font-size: 1.1rem;
+    border-radius: 20px;
+    border: 2px solid #ccc;
+    background-color: white;
+    color: #666;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.btn-modo.activo {
+    border-color: var(--color-tema);
+    background-color: var(--color-tema);
+    color: white;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
 /* --- CONTROLES DE FILTRO Y ELECCIÓN --- */
@@ -36,12 +64,11 @@ h1 {
     flex-wrap: wrap;
 }
 
-/* --- ESTILOS DEL BUSCADOR --- */
 #buscador {
     padding: 10px 20px;
     font-size: 1rem;
     border-radius: 8px;
-    border: 2px solid var(--granate);
+    border: 2px solid var(--color-tema);
     background-color: white;
     color: var(--texto-oscuro);
     font-family: inherit;
@@ -59,16 +86,16 @@ select, button {
     padding: 10px 20px;
     font-size: 1rem;
     border-radius: 8px;
-    border: 2px solid var(--granate);
+    border: 2px solid var(--color-tema);
     background-color: white;
-    color: var(--granate);
+    color: var(--color-tema);
     cursor: pointer;
     font-family: inherit;
     font-weight: bold;
 }
 
 button.modo-activo {
-    background-color: var(--granate);
+    background-color: var(--color-tema);
     color: white;
 }
 
@@ -103,12 +130,11 @@ button.modo-activo {
     position: relative;
 }
 
-/* Estilo del botón de eliminar (la X) */
 .btn-eliminar-corte {
     position: absolute;
     top: -5px;
     right: 0px;
-    background-color: var(--granate);
+    background-color: var(--color-tema);
     color: white;
     border: 2px solid white;
     border-radius: 50%;
@@ -139,7 +165,7 @@ button.modo-activo {
     border-radius: 50%;
     object-fit: cover;
     object-position: top;
-    border: 3px solid var(--granate);
+    border: 3px solid var(--color-tema);
 }
 
 .miniatura-corte p {
@@ -178,7 +204,7 @@ button.modo-activo {
 .candidata-card {
     background-color: #ffffff;
     border-radius: 12px;
-    box-shadow: 0 6px 12px rgba(128, 0, 32, 0.1);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     border-top: 5px solid var(--dorado);
     transition: transform 0.2s ease, box-shadow 0.2s;
@@ -216,12 +242,12 @@ button.modo-activo {
     flex-direction: column;
 }
 
-.nombre-candidata { margin: 0 0 5px 0; font-size: 1.4rem; color: var(--granate); }
+.nombre-candidata { margin: 0 0 5px 0; font-size: 1.4rem; color: var(--color-tema); }
 .falla-texto, .sector-texto { margin: 2px 0; font-size: 0.95rem; color: #666; }
 .falla-texto { font-weight: bold; }
 
 .probabilidad-box {
-    background-color: var(--granate);
+    background-color: var(--color-tema);
     color: var(--dorado);
     padding: 15px;
     border-radius: 8px;
@@ -237,3 +263,82 @@ button.modo-activo {
 .porcentaje-wrapper { display: flex; flex-direction: column; align-items: flex-start; }
 .numero-probabilidad { font-size: 1.8rem; font-weight: bold; line-height: 1; }
 .label-probabilidad { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.9; }
+
+/* --- BARRA DE AUTENTICACIÓN --- */
+.auth-bar {
+    background-color: #fff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+}
+
+.auth-bar input {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+.auth-bar button {
+    padding: 8px 15px;
+    font-size: 0.9rem;
+    border: 1px solid var(--color-tema);
+    background-color: transparent;
+    color: var(--color-tema);
+}
+
+.auth-bar button:hover {
+    background-color: var(--color-tema);
+    color: white;
+}
+
+.btn-logout {
+    border-color: #777 !important;
+    color: #777 !important;
+}
+
+.btn-logout:hover {
+    background-color: #777 !important;
+    color: white !important;
+}
+
+/* --- TABLA DE CLASIFICACIÓN --- */
+.tabla-ranking {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    border-collapse: collapse;
+    font-size: 1.1rem;
+}
+
+.tabla-ranking th {
+    background-color: var(--color-tema);
+    color: white;
+    padding: 12px;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+}
+
+.tabla-ranking td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    color: var(--texto-oscuro);
+}
+
+.tabla-ranking tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.tabla-ranking tr:hover {
+    background-color: #f1f1f1;
+}
+
+.medalla {
+    font-size: 1.5rem;
+}
