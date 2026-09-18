@@ -350,15 +350,6 @@ const dbMayores = [
         notaEntrevista: 8.2,
         hablaValenciano: true,
         foto: "./fotos/Beatriz_Blanco_Tamarit.png"
-    },
-    {
-        id: 39,
-        nombre: "Carmen Chiva Gomara",
-        falla: "Falla Cadis-Literat Azorín",
-        sector: "Sector Russafa B", 
-        notaEntrevista: 8.2,
-        hablaValenciano: true,
-        foto: "./fotos/Carmen_Chiva_Gomara.png"
     }
 ];
 
@@ -565,6 +556,39 @@ const dbInfantiles = [
     
 ];
 
+if (!Array.isArray(window.preseleccionesOficiales2027)) {
+    throw new Error("No se ha podido cargar el catálogo oficial de preselecciones 2027.");
+}
+
+const candidatasExistentes = new Map(
+    [...dbMayores, ...dbInfantiles].map(candidata => [candidata.nombre, candidata])
+);
+let siguienteId = Math.max(...[...dbMayores, ...dbInfantiles].map(candidata => candidata.id)) + 1;
+
+window.preseleccionesOficiales2027.forEach(candidataOficial => {
+    const candidataExistente = candidatasExistentes.get(candidataOficial.nombre);
+    if (candidataExistente) {
+        candidataExistente.foto = candidataOficial.foto;
+        return;
+    }
+
+    const candidata = {
+        id: siguienteId++,
+        nombre: candidataOficial.nombre,
+        falla: candidataOficial.falla,
+        sector: candidataOficial.sector,
+        notaEntrevista: candidataOficial.tipo === 'mayores' ? 8.2 : 8.5,
+        hablaValenciano: candidataOficial.tipo === 'mayores',
+        foto: candidataOficial.foto
+    };
+
+    if (candidataOficial.tipo === 'mayores') {
+        dbMayores.push(candidata);
+    } else {
+        dbInfantiles.push(candidata);
+    }
+});
+
 // ================= VARIABLES DE ESTADO ================= //
 let usuarioActivo = null;
 let modoActual = 'mayores'; 
@@ -581,7 +605,7 @@ function cambiarCategoria(nuevaCategoria) {
     candidatasActivas = (modoActual === 'mayores') ? dbMayores : dbInfantiles;
 
     document.documentElement.style.setProperty('--color-tema', modoActual === 'mayores' ? '#800020' : '#0077b6');
-    document.getElementById('titulo-app').textContent = modoActual === 'mayores' ? 'Probabilidad FMV 2026' : 'Probabilidad FMIV 2026';
+    document.getElementById('titulo-app').textContent = modoActual === 'mayores' ? 'Probabilidad FMV 2027' : 'Probabilidad FMIV 2027';
     document.getElementById('texto-corte').textContent = modoActual === 'mayores' ? 'Corte de Honor' : 'Corte de Honor Infantil';
     document.getElementById('titulo-fmv').textContent = modoActual === 'mayores' ? 'Fallera Mayor de Valencia' : 'Fallera Mayor Infantil de Valencia';
 
@@ -710,7 +734,7 @@ function cambiarCategoria(nuevaCategoria) {
     // 3. Modificar la interfaz visual (Colores y Textos)
     document.documentElement.style.setProperty('--color-tema', modoActual === 'mayores' ? '#800020' : '#0077b6');
     
-    document.getElementById('titulo-app').textContent = modoActual === 'mayores' ? 'Probabilidad FMV 2026' : 'Probabilidad FMIV 2026';
+    document.getElementById('titulo-app').textContent = modoActual === 'mayores' ? 'Probabilidad FMV 2027' : 'Probabilidad FMIV 2027';
     document.getElementById('texto-corte').textContent = modoActual === 'mayores' ? 'Corte de Honor' : 'Corte de Honor Infantil';
     document.getElementById('titulo-fmv').textContent = modoActual === 'mayores' ? 'Fallera Mayor de Valencia' : 'Fallera Mayor Infantil de Valencia';
 
@@ -931,7 +955,7 @@ function compartirWhatsApp() {
     if (corteHonor.length === 0) return;
 
     const etiquetaRango = modoActual === 'mayores' ? 'FMV' : 'FMIV';
-    let texto = `👑 *Mi Quiniela para ${etiquetaRango} 2026* 👑\n\n*Corte de Honor:*\n`;
+    let texto = `👑 *Mi Quiniela para ${etiquetaRango} 2027* 👑\n\n*Corte de Honor:*\n`;
     
     corteHonor.forEach(id => {
         const c = candidatasActivas.find(cand => cand.id === id);
@@ -944,7 +968,7 @@ function compartirWhatsApp() {
         texto += `\n🔥 *${tituloGran}:*\n✨ ${cFinal.nombre} ✨\n`;
     }
 
-    texto += `\n📍 #FallaMinistro #${etiquetaRango}2026`;
+    texto += `\n📍 #FallaMinistro #${etiquetaRango}2027`;
     window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`, '_blank');
 }
 
@@ -961,7 +985,7 @@ function descargarImagen() {
 
     html2canvas(zonaEleccion, { backgroundColor: "#ffffff", scale: 2 }).then(canvas => {
         const enlace = document.createElement('a');
-        enlace.download = `Quiniela_${etiquetaRango}_2026.png`;
+        enlace.download = `Quiniela_${etiquetaRango}_2027.png`;
         enlace.href = canvas.toDataURL("image/png");
         enlace.click();
 
