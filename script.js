@@ -1,4 +1,4 @@
-﻿// ================= CONFIGURACIÓN SUPABASE ================= //
+// ================= CONFIGURACIÓN SUPABASE ================= //
 const SUPABASE_URL = "https://xpxrhrncxkfkgavdsrsc.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_kihoxAj0CoPTAhvLux2SZw_tnWZzMVZ";
 
@@ -18,31 +18,19 @@ const dbInfantiles = window.preseleccionesOficiales2027
 // ================= VARIABLES DE ESTADO ================= //
 let usuarioActivo = null;
 let modoActual = 'mayores'; 
-let candidatasActivas = dbMayores; // Asegúrate de tener dbMayores y dbInfantiles declarados en tu código
+let candidatasActivas = dbMayores;
 let corteHonor = []; 
 let elegidaFinal = null; 
 let modoEleccion = false; 
 
-// ================= LÓGICA DE CAMBIO DE MODO ================= //
-function cambiarCategoria(nuevaCategoria) {
-    if (modoActual === nuevaCategoria) return; 
-    guardarEstado();
-    modoActual = nuevaCategoria;
-    candidatasActivas = (modoActual === 'mayores') ? dbMayores : dbInfantiles;
+// Estado y caché para "Ver tu quiniela"
+let quinielaModalActual = null;
+let categoriaModalQuiniela = 'mayores';
+let cacheQuinielasUsuario = { mayores: null, infantiles: null };
 
-    document.documentElement.style.setProperty('--color-tema', modoActual === 'mayores' ? '#800020' : '#0077b6');
-    document.getElementById('titulo-app').textContent = modoActual === 'mayores' ? 'Probabilidad FMV 2027' : 'Probabilidad FMIV 2027';
-    document.getElementById('texto-corte').textContent = modoActual === 'mayores' ? 'Corte de Honor' : 'Corte de Honor Infantil';
-    document.getElementById('titulo-fmv').textContent = modoActual === 'mayores' ? 'Fallera Mayor de Valencia' : 'Fallera Mayor Infantil de Valencia';
-
-    document.getElementById('btn-mayores').classList.toggle('activo', modoActual === 'mayores');
-    document.getElementById('btn-infantiles').classList.toggle('activo', modoActual === 'infantiles');
-
-    cargarEstado();
-    inicializarFiltros();
-    document.getElementById('buscador').value = ''; 
-    actualizarCuadroEleccion();
-    renderizarTarjetas();
+function obtenerCandidataPorId(id) {
+    if (!window.preseleccionesOficiales2027) return null;
+    return window.preseleccionesOficiales2027.find(c => c.id === id) || null;
 }
 
 // ================= FUNCIONES DE AUTENTICACIÓN ================= //
@@ -81,6 +69,7 @@ async function login() {
     } else {
         usuarioActivo = data.user;
         actualizarInterfazAuth();
+        precargarQuinielasUsuario();
         alert("Bienvenido, sesión iniciada.");
     }
 }
@@ -88,6 +77,9 @@ async function login() {
 async function logout() {
     await clienteSupabase.auth.signOut();
     usuarioActivo = null;
+    cacheQuinielasUsuario = { mayores: null, infantiles: null };
+    quinielaModalActual = null;
+    cerrarModalMiQuiniela();
     actualizarInterfazAuth();
 }
 
@@ -112,6 +104,7 @@ async function revisarSesion() {
     if (session) {
         usuarioActivo = session.user;
         actualizarInterfazAuth();
+        precargarQuinielasUsuario();
     }
 }
 
@@ -140,8 +133,334 @@ async function guardarQuinielaEnNube() {
     if (error) {
         alert("No se pudo guardar: " + error.message);
     } else {
-        alert("¡Tu quiniela oficial ha sido guardada en la base de datos de la comisión!");
+        cacheQuinielasUsuario[modoActual] = {
+            user_id: usuarioActivo.id,
+            user_email: usuarioActivo.email,
+            tipo: modoActual,
+            corte: [...corteHonor],
+            elegida_final: elegidaFinal
+        };
+        alert("¡Tu quiniela oficial ha sido guardada en la base de datos de la comisión!\n\nPuedes consultarla cuando quieras desde el botón 'Ver tu quiniela'.");
     }
+}
+
+// ================= SISTEMA "VER TU QUINIELA" ================= //
+
+async function precargarQuinielasUsuario() {
+    if (!usuarioActivo) return;
+    try {
+        const { data, error } = await clienteSupabase
+            .from('quinielas')
+            .select('*')
+            .eq('user_id', usuarioActivo.id);
+
+        if (!error && data) {
+            data.forEach(q => {
+                if (q.tipo) cacheQuinielasUsuario[q.tipo] = q;
+            });
+        }
+    } catch (err) {
+        console.warn("No se pudieron precargar las quinielas del usuario:", err);
+    }
+}
+
+async function abrirModalMiQuiniela(categoria = null) {
+    if (!usuarioActivo) {
+        alert("Debes registrarte o iniciar sesión para poder ver tu quiniela guardada.");
+        const emailInput = document.getElementById('auth-email');
+        if (emailInput) {
+            emailInput.scrollIntoView({ behavior: 'smooth' });
+            emailInput.focus();
+        }
+        return;
+    }
+
+    const modal = document.getElementById('modal-mi-quiniela');
+    if (!modal) return;
+
+    categoriaModalQuiniela = categoria || modoActual;
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+
+    const titulo = document.getElementById('modal-quiniela-titulo');
+    if (titulo) titulo.textContent = '📋 Tu Quiniela Oficial';
+
+    const sub = document.getElementById('modal-quiniela-subtitulo');
+    if (sub) sub.textContent = `Usuario: ${usuarioActivo.email}`;
+
+    const tabs = document.querySelector('.modal-tabs');
+    if (tabs) tabs.style.display = 'flex';
+
+    actualizarTabsModalQuiniela();
+    await renderizarCuerpoModalQuiniela();
+}
+
+function cerrarModalMiQuiniela() {
+    const modal = document.getElementById('modal-mi-quiniela');
+    if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+    }
+}
+
+function cerrarModalSiFondo(event) {
+    if (event.target && event.target.id === 'modal-mi-quiniela') {
+        cerrarModalMiQuiniela();
+    }
+}
+
+window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        cerrarModalMiQuiniela();
+    }
+});
+
+async function cambiarTabModalQuiniela(nuevaCategoria) {
+    if (categoriaModalQuiniela === nuevaCategoria) return;
+    categoriaModalQuiniela = nuevaCategoria;
+    actualizarTabsModalQuiniela();
+    await renderizarCuerpoModalQuiniela();
+}
+
+function actualizarTabsModalQuiniela() {
+    const tabMayores = document.getElementById('modal-tab-mayores');
+    const tabInfantiles = document.getElementById('modal-tab-infantiles');
+    if (tabMayores) tabMayores.classList.toggle('activo', categoriaModalQuiniela === 'mayores');
+    if (tabInfantiles) tabInfantiles.classList.toggle('activo', categoriaModalQuiniela === 'infantiles');
+}
+
+async function renderizarCuerpoModalQuiniela() {
+    const contenedor = document.getElementById('modal-quiniela-cuerpo');
+    const btnCargar = document.getElementById('btn-modal-cargar-tablero');
+    const btnCompartir = document.getElementById('btn-modal-compartir');
+
+    if (btnCargar) btnCargar.style.display = 'none';
+    if (btnCompartir) btnCompartir.style.display = 'none';
+
+    contenedor.innerHTML = `
+        <div class="modal-cargando">
+            <div class="spinner"></div>
+            <p>Consultando tu quiniela oficial de ${categoriaModalQuiniela === 'mayores' ? 'Mayores' : 'Infantiles'}...</p>
+        </div>
+    `;
+
+    let quiniela = cacheQuinielasUsuario[categoriaModalQuiniela];
+
+    if (!quiniela) {
+        const { data, error } = await clienteSupabase
+            .from('quinielas')
+            .select('*')
+            .eq('user_id', usuarioActivo.id)
+            .eq('tipo', categoriaModalQuiniela)
+            .maybeSingle();
+
+        if (error) {
+            contenedor.innerHTML = `
+                <div class="quiniela-vacia">
+                    <p style="color: red;">Error al consultar la quiniela: ${error.message}</p>
+                    <button onclick="renderizarCuerpoModalQuiniela()" class="btn-crear-quiniela">Reintentar</button>
+                </div>
+            `;
+            return;
+        }
+
+        quiniela = data;
+        if (quiniela) {
+            cacheQuinielasUsuario[categoriaModalQuiniela] = quiniela;
+        }
+    }
+
+    quinielaModalActual = quiniela;
+
+    if (!quiniela || !quiniela.corte || quiniela.corte.length === 0) {
+        const nombreCat = categoriaModalQuiniela === 'mayores' ? 'Mayores' : 'Infantiles';
+        contenedor.innerHTML = `
+            <div class="quiniela-vacia">
+                <div class="icono-vacio">📝</div>
+                <h3>No tienes quiniela registrada para ${nombreCat}</h3>
+                <p>Aún no has guardado tu selección oficial de 13 candidatas en la base de datos.</p>
+                <button onclick="irACrearQuiniela('${categoriaModalQuiniela}')" class="btn-crear-quiniela">
+                    Hacer mi quiniela de ${nombreCat} ahora
+                </button>
+            </div>
+        `;
+        return;
+    }
+
+    renderizarCuerpoConDatos(quiniela, true);
+}
+
+function renderizarCuerpoConDatos(quiniela, esPropia = true) {
+    const contenedor = document.getElementById('modal-quiniela-cuerpo');
+    const btnCargar = document.getElementById('btn-modal-cargar-tablero');
+    const btnCompartir = document.getElementById('btn-modal-compartir');
+
+    if (btnCargar) btnCargar.style.display = 'inline-block';
+    if (btnCompartir) btnCompartir.style.display = 'inline-block';
+
+    const esMayores = (quiniela.tipo || categoriaModalQuiniela) === 'mayores';
+    const tituloFM = esMayores ? 'Fallera Mayor de Valencia' : 'Fallera Mayor Infantil de Valencia';
+    const elegidaId = quiniela.elegida_final;
+    const candidataFM = elegidaId ? obtenerCandidataPorId(elegidaId) : null;
+
+    let html = '';
+
+    // 1. Tarjeta destacada de Fallera Mayor
+    html += `
+        <div class="quiniela-seccion-fmv">
+            <span class="quiniela-fmv-badge">👑 ${tituloFM}</span>
+    `;
+
+    if (candidataFM) {
+        html += `
+            <div class="quiniela-fmv-card">
+                <img class="quiniela-fmv-foto" src="${candidataFM.foto}" alt="${candidataFM.nombre}" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'100%\\' height=\\'100%\\'><rect width=\\'100%\\' height=\\'100%\\' fill=\\'%23ccc\\'/></svg>'">
+                <div class="quiniela-fmv-detalles">
+                    <h3 class="quiniela-fmv-nombre">${candidataFM.nombre}</h3>
+                    <p class="quiniela-fmv-falla">${candidataFM.falla}</p>
+                    <p class="quiniela-fmv-sector">Sector: ${candidataFM.sector}</p>
+                </div>
+            </div>
+        `;
+    } else {
+        html += `
+            <p style="color: #666; margin: 10px 0;">No especificaste Fallera Mayor para esta quiniela (solo Corte de Honor).</p>
+        `;
+    }
+    html += `</div>`;
+
+    // 2. Cuadrícula de la Corte de Honor
+    const totalCandidatas = (quiniela.corte || []).length;
+    html += `
+        <div class="quiniela-seccion-corte">
+            <h3>
+                <span>👑 Corte de Honor</span>
+                <span style="font-size: 0.9rem; color: #666; font-weight: normal;">(${totalCandidatas} candidatas seleccionadas)</span>
+            </h3>
+            <div class="quiniela-corte-grid">
+    `;
+
+    (quiniela.corte || []).forEach(id => {
+        const c = obtenerCandidataPorId(id);
+        if (!c) return;
+
+        const esLaFM = elegidaId === c.id;
+        html += `
+            <div class="quiniela-candidata-card ${esLaFM ? 'es-fmv' : ''}">
+                ${esLaFM ? `<span class="quiniela-tag-fmv">👑 ${esMayores ? 'FMV' : 'FMIV'}</span>` : ''}
+                <img class="quiniela-candidata-foto" src="${c.foto}" alt="${c.nombre}" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'100%\\' height=\\'100%\\'><rect width=\\'100%\\' height=\\'100%\\' fill=\\'%23ccc\\'/></svg>'">
+                <div class="quiniela-candidata-info">
+                    <div class="quiniela-candidata-nombre" title="${c.nombre}">${c.nombre}</div>
+                    <div class="quiniela-candidata-falla" title="${c.falla}">${c.falla}</div>
+                    <div class="quiniela-candidata-sector">Sector: ${c.sector}</div>
+                </div>
+            </div>
+        `;
+    });
+
+    html += `
+            </div>
+        </div>
+    `;
+
+    contenedor.innerHTML = html;
+}
+
+function irACrearQuiniela(categoria) {
+    cerrarModalMiQuiniela();
+    if (modoActual !== categoria) {
+        cambiarCategoria(categoria);
+    }
+    if (!modoEleccion) {
+        toggleModoEleccion();
+    }
+    const zona = document.getElementById('zona-eleccion');
+    if (zona) {
+        zona.scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
+function cargarQuinielaEnTableroDesdeModal() {
+    if (!quinielaModalActual || !quinielaModalActual.corte) return;
+
+    const tipoQuiniela = quinielaModalActual.tipo || categoriaModalQuiniela;
+    if (modoActual !== tipoQuiniela) {
+        cambiarCategoria(tipoQuiniela);
+    }
+
+    corteHonor = [...quinielaModalActual.corte];
+    elegidaFinal = quinielaModalActual.elegida_final || null;
+
+    guardarEstado();
+    actualizarCuadroEleccion();
+    renderizarTarjetas();
+
+    if (!modoEleccion) {
+        toggleModoEleccion();
+    }
+
+    cerrarModalMiQuiniela();
+
+    const zona = document.getElementById('zona-eleccion');
+    if (zona) {
+        zona.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    alert(`¡Tu quiniela oficial de ${tipoQuiniela === 'mayores' ? 'Mayores' : 'Infantiles'} se ha cargado en el tablero!`);
+}
+
+function compartirWhatsAppDesdeModal() {
+    if (!quinielaModalActual || !quinielaModalActual.corte) return;
+
+    const tipoQuiniela = quinielaModalActual.tipo || categoriaModalQuiniela;
+    const esMayores = tipoQuiniela === 'mayores';
+    const etiquetaRango = esMayores ? 'FMV' : 'FMIV';
+    let texto = `👑 *Mi Quiniela Oficial para ${etiquetaRango} 2027* 👑\n\n*Corte de Honor:*\n`;
+
+    quinielaModalActual.corte.forEach(id => {
+        const c = obtenerCandidataPorId(id);
+        if (c && quinielaModalActual.elegida_final !== id) {
+            texto += `➖ ${c.nombre} (${c.falla})\n`;
+        }
+    });
+
+    if (quinielaModalActual.elegida_final) {
+        const cFinal = obtenerCandidataPorId(quinielaModalActual.elegida_final);
+        if (cFinal) {
+            const tituloGran = esMayores ? 'FALLERA MAYOR DE VALENCIA' : 'FALLERA MAYOR INFANTIL DE VALENCIA';
+            texto += `\n🔥 *${tituloGran}:*\n✨ ${cFinal.nombre} (${cFinal.falla}) ✨\n`;
+        }
+    }
+
+    texto += `\n📍 #FallaMinistro #${etiquetaRango}2027`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`, '_blank');
+}
+
+function verQuinielaUsuarioRanking(email, usuario, corte, elegidaFinal) {
+    const modal = document.getElementById('modal-mi-quiniela');
+    if (!modal) return;
+
+    categoriaModalQuiniela = modoActual;
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+
+    const titulo = document.getElementById('modal-quiniela-titulo');
+    if (titulo) titulo.textContent = `📋 Quiniela de ${usuario}`;
+
+    const sub = document.getElementById('modal-quiniela-subtitulo');
+    if (sub) sub.textContent = `Email: ${email} | Categoría: ${modoActual === 'mayores' ? 'Mayores' : 'Infantiles'}`;
+
+    const tabs = document.querySelector('.modal-tabs');
+    if (tabs) tabs.style.display = 'none';
+
+    quinielaModalActual = {
+        user_email: email,
+        tipo: modoActual,
+        corte: corte,
+        elegida_final: elegidaFinal
+    };
+
+    renderizarCuerpoConDatos(quinielaModalActual, false);
 }
 
 
@@ -508,7 +827,7 @@ async function cargarRanking() {
         let puntos = 0;
         
         // Sumar 1 punto por cada acierto en la Corte
-        if (oficial.corte.length > 0) {
+        if (oficial.corte.length > 0 && Array.isArray(q.corte)) {
             q.corte.forEach(id => {
                 if (oficial.corte.includes(id)) puntos += 1;
             });
@@ -520,8 +839,11 @@ async function cargarRanking() {
         }
 
         return {
-            usuario: q.user_email.split('@')[0], // Mostrar solo la primera parte del email por privacidad
-            puntos: puntos
+            email: q.user_email || '',
+            usuario: q.user_email ? q.user_email.split('@')[0] : 'Anónimo',
+            puntos: puntos,
+            corte: Array.isArray(q.corte) ? q.corte : [],
+            elegida_final: q.elegida_final || null
         };
     });
 
@@ -536,6 +858,7 @@ async function cargarRanking() {
                     <th>Posición</th>
                     <th>Fallero/a</th>
                     <th>Puntuación</th>
+                    <th>Elecciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -547,11 +870,23 @@ async function cargarRanking() {
         if (index === 1) medalla = '🥈';
         if (index === 2) medalla = '🥉';
 
+        const esMiUsuario = usuarioActivo && r.email && r.email.toLowerCase() === usuarioActivo.email.toLowerCase();
+        const jsonCorte = JSON.stringify(r.corte).replace(/"/g, '&quot;');
+        const elegidaParam = r.elegida_final !== null ? r.elegida_final : 'null';
+
         htmlTabla += `
-            <tr>
+            <tr style="${esMiUsuario ? 'background-color: #fff9e6; font-weight: 500;' : ''}">
                 <td style="font-weight:bold; font-size:1.2rem;">${medalla}</td>
-                <td>${r.usuario}</td>
+                <td>
+                    ${r.usuario}
+                    ${esMiUsuario ? '<span style="background: var(--dorado); color: var(--color-tema); font-size: 0.75rem; padding: 2px 7px; border-radius: 10px; margin-left: 6px; font-weight: bold;">Tú</span>' : ''}
+                </td>
                 <td style="font-weight:bold; color:var(--color-tema);">${r.puntos} pts</td>
+                <td>
+                    <button class="btn-ver-quiniela" onclick="verQuinielaUsuarioRanking('${r.email}', '${r.usuario}', ${jsonCorte}, ${elegidaParam})" style="padding: 5px 12px; font-size: 0.85rem; border-radius: 6px; cursor: pointer;">
+                        👁️ Ver elecciones
+                    </button>
+                </td>
             </tr>
         `;
     });
