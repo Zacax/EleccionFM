@@ -8,553 +8,12 @@ const clienteSupabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON
 
 
 // ================= DATOS ================= //
-const dbMayores = [
-    {
-        id: 1, 
-        nombre: "Alba Estopiña Segrera",
-        falla: "Falla Avinguda Malva-Rosa-Antoni Ponz-Cavite",
-        sector: "Sector Malva-rosa - Cabanyal - Beteró",
-        notaEntrevista: 9.0,
-        hablaValenciano: true,
-        foto: "./fotos/Alba_Estopiña_Segrera.png" 
-    },
-    {
-        id: 2,
-        nombre: "Paula Bonet Barberá",
-        falla: "Falla Sant Rafael-Antón Martín",
-        sector: "Sector Malva-rosa - Cabanyal - Beteró",
-        notaEntrevista: 7.5,
-        hablaValenciano: false,
-        foto: "./fotos/Paula_Bonet_Barberá.png"
-    },
-    {
-        id: 3,
-        nombre: "Patricia Rubio Ros",
-        falla: "Falla Sant Pere-Mare de Déu de la Vallivana",
-        sector: "Sector Malva-rosa - Cabanyal - Beteró", 
-        notaEntrevista: 8.2,
-        hablaValenciano: true,
-        foto: "./fotos/Patricia_Rubio_Ros.png"
-    },
-    {
-        id: 4,
-        nombre: "Lydia Contreras Carrasco",
-        falla: "Falla Barri de Sant Isidre",
-        sector: "Sector Patraix", 
-        notaEntrevista: 8.2,
-        hablaValenciano: true,
-        foto: "./fotos/Lydia_Contreras_Carrasco.png"
-    },
-    {
-        id: 5,
-        nombre: "Leire Silva Martínez",
-        falla: "Falla Ceramista Ros-Josep Maria Mortes Lerma",
-        sector: "Sector Patraix", 
-        notaEntrevista: 8.2,
-        hablaValenciano: true,
-        foto: "./fotos/Leire_Silva_Martínez.png"
-    },
-    {
-        id: 6,
-        nombre: "Carmen Ballester Muñoz",
-        falla: "Falla Músic Espí-Gravador Fabregat",
-        sector: "Sector Rascanya", 
-        notaEntrevista: 8.2,
-        hablaValenciano: true,
-        foto: "./fotos/Carmen_Ballester_Muñoz.png"
-    },
-    {
-        id: 7,
-        nombre: "Paula Crespo Herrero",
-        falla: "Falla Montortal-Torrefiel",
-        sector: "Sector Rascanya", 
-        notaEntrevista: 8.2,
-        hablaValenciano: true,
-        foto: "./fotos/Paula_Crespo_Herrero.png"
-    },
-    {
-        id: 8,
-        nombre: "Sara Cabello Andreu",
-        falla: "Falla Avinguda Primat Reig-Sant Vicent de Paül",
-        sector: "Sector Rascanya", 
-        notaEntrevista: 8.2,
-        hablaValenciano: true,
-        foto: "./fotos/Sara_Cabello_Andreu.png"
-    },
-    {
-        id: 9,
-        nombre: "Esther Rodrigo Giménez",
-        falla: "Falla Riu Segura-Forn d’Alcedo",
-        sector: "Sector Poblats al Sud", 
-        notaEntrevista: 8.2,
-        hablaValenciano: true,
-        foto: "./fotos/Esther_Rodrigo_Giménez.png"
-    },
-    {
-        id: 10,
-        nombre: "Andrea Meca Monrabal",
-        falla: "Falla Hellín-Pere de Lunal",
-        sector: "Sector Poblats al Sud", 
-        notaEntrevista: 8.2,
-        hablaValenciano: true,
-        foto: "./fotos/Andrea_Meca_Monrabal.png"
-    },
-    {
-        id: 11,
-        nombre: "María Requena Butrón",
-        falla: "Falla Grup de Peixcadors del Perellonet",
-        sector: "Sector Poblats al Sud", 
-        notaEntrevista: 8.2,
-        hablaValenciano: true,
-        foto: "./fotos/María_Requena_Butrón.png"
-    },
-    {
-        id: 12,
-        nombre: "María Ruiz Such",
-        falla: "Falla Vicent Sancho Tello-Xile",
-        sector: "Sector Pla del Reial - Benimaclet", 
-        notaEntrevista: 8.2,
-        hablaValenciano: true,
-        foto: "./fotos/María_Ruiz_Such.png"
-    },
-    {
-        id: 13,
-        nombre: "María Valero Sanmartín",
-        falla: "Falla Molinell-Alboraia",
-        sector: "Sector Pla del Reial - Benimaclet", 
-        notaEntrevista: 8.2,
-        hablaValenciano: true,
-        foto: "./fotos/María_Valero_Sanmartín.png"
-    },
-    {
-        id: 14,
-        nombre: "Paula López Pérez",
-        falla: "Falla Avinguda de Valladolid-Enginyer Vicent Pichó",
-        sector: "Sector Pla del Reial - Benimaclet", 
-        notaEntrevista: 8.2,
-        hablaValenciano: true,
-        foto: "./fotos/Paula_López_Pérez.png"
-    },
-    {
-        id: 15,
-        nombre: "Ana Inés Pérez Gómez",
-        falla: "Falla Plaça Santa Creu",
-        sector: "Sector El Carme", 
-        notaEntrevista: 8.2,
-        hablaValenciano: true,
-        foto: "./fotos/Ana_Inés_Pérez_Gómez.png"
-    },
-    {
-        id: 16,
-        nombre: "Leticia Hoffmann Hernandis",
-        falla: "Falla Dalt-Sant Tomàs",
-        sector: "Sector El Carme", 
-        notaEntrevista: 8.2,
-        hablaValenciano: true,
-        foto: "./fotos/Leticia_Hoffmann_Hernandis.png"
-    },
-    {
-        id: 17,
-        nombre: "Marta Torres Miranda",
-        falla: "Falla Na Jordana",
-        sector: "Sector El Carme", 
-        notaEntrevista: 8.2,
-        hablaValenciano: true,
-        foto: "./fotos/Marta_Torres_Miranda.png"
-    },
-    {
-        id: 18,
-        nombre: "María Abad Carrión",
-        falla: "Falla Sant Antoni",
-        sector: "Sector Quart de Poblet - Xirivella", 
-        notaEntrevista: 8.2,
-        hablaValenciano: true,
-        foto: "./fotos/María_Abad_Carrión.png"
-    },
-    {
-        id: 19,
-        nombre: "Raquel Sanz López",
-        falla: "Falla València-Teodor Llorente",
-        sector: "Sector Quart de Poblet - Xirivella", 
-        notaEntrevista: 8.2,
-        hablaValenciano: true,
-        foto: "./fotos/Raquel_Sanz_López.png"
-    },
-    {
-        id: 20,
-        nombre: "Laura López Castillo",
-        falla: "Falla Luz Casanova-Pare Espasa",
-        sector: "Sector Quart de Poblet - Xirivella", 
-        notaEntrevista: 8.2,
-        hablaValenciano: true,
-        foto: "./fotos/Laura_López_Castillo.png"
-    },
-    {
-        id: 21,
-        nombre: "Claudia Ravello García-Conde",
-        falla: "Falla Comte de Salvatierra-Ciril Amorós",
-        sector: "Sector Pla del Remei - Gran Via", 
-        notaEntrevista: 8.2,
-        hablaValenciano: true,
-        foto: "./fotos/Claudia_Ravello_García-Conde.png"
-    },
-    {
-        id: 22,
-        nombre: "Carla Yago Barranco",
-        falla: "Falla Salamanca-Comte d’Altea",
-        sector: "Sector Pla del Remei - Gran Via", 
-        notaEntrevista: 8.2,
-        hablaValenciano: true,
-        foto: "./fotos/Carla_Yago_Barranco.png"
-    },
-    {
-        id: 23,
-        nombre: "Gemma Galiano López",
-        falla: "Falla Avinguda Jacinto Benavente-Regina Na Germana",
-        sector: "Sector Pla del Remei - Gran Via", 
-        notaEntrevista: 8.2,
-        hablaValenciano: true,
-        foto: "./fotos/Gemma_Galiano_López.png"
-    },
-    {
-        id: 24,
-        nombre: "Paloma Mora García",
-        falla: "Falla Doctor Marañón-Mestre Palau",
-        sector: "Sector Mislata", 
-        notaEntrevista: 8.2,
-        hablaValenciano: true,
-        foto: "./fotos/Paloma_Mora_García.png"
-    },
-    {
-        id: 25,
-        nombre: "Laura Flores Hinojosa",
-        falla: "Falla Plaça de la Moreria",
-        sector: "Sector Mislata", 
-        notaEntrevista: 8.2,
-        hablaValenciano: true,
-        foto: "./fotos/Laura_Flores_Hinojosa.png"
-    },
-    {
-        id: 26,
-        nombre: "Lara Cuevas Muriel",
-        falla: "Falla Doctor Domingo Orozco-Bailén",
-        sector: "Sector Benimàmet - Burjassot - Beniferri", 
-        notaEntrevista: 8.2,
-        hablaValenciano: true,
-        foto: "./fotos/Lara_Cuevas_Muriel.png"
-    },
-    {
-        id: 27,
-        nombre: "Paula López-Tercero Romero",
-        falla: "Falla Isaac Peral-Misser Mascó",
-        sector: "Sector Benimàmet - Burjassot - Beniferri", 
-        notaEntrevista: 8.2,
-        hablaValenciano: true,
-        foto: "./fotos/Paula_López-Tercero_Romero.png"
-    },
-    {
-        id: 28,
-        nombre: "Gemma Belenguer Gómez",
-        falla: "Falla Evarist Bas-Cullera",
-        sector: "Sector Benimàmet - Burjassot - Beniferri", 
-        notaEntrevista: 8.2,
-        hablaValenciano: true,
-        foto: "./fotos/Gemma_Belenguer_Gómez.png"
-    },
-    {
-        id: 29,
-        nombre: "Blanca Rodenas Maestro",
-        falla: "Falla Plaça La Creu -Els Àngels",
-        sector: "Sector Canyamelar - Grau - Natzaret", 
-        notaEntrevista: 8.2,
-        hablaValenciano: true,
-        foto: "./fotos/Blanca_Rodenas_Maestro.png"
-    },
-    {
-        id: 30,
-        nombre: "María Chulia Zaragoza",
-        falla: "Falla Blocs Platja",
-        sector: "Sector Canyamelar - Grau - Natzaret", 
-        notaEntrevista: 8.2,
-        hablaValenciano: true,
-        foto: "./fotos/María_Chulia_Zaragoza.png"
-    },
-    {
-        id: 31,
-        nombre: "Elena Giménez Grimalt",
-        falla: "Falla Just Vilar-Mercat del Cabanyal",
-        sector: "Sector Canyamelar - Grau - Natzaret", 
-        notaEntrevista: 8.2,
-        hablaValenciano: true,
-        foto: "./fotos/Elena_Giménez_Grimalt.png"
-    },
-    {
-        id: 32,
-        nombre: "María Rodríguez Palomo",
-        falla: "Falla Rubén Darío-Fra Lluís Colomer",
-        sector: "Sector Algirós", 
-        notaEntrevista: 8.2,
-        hablaValenciano: true,
-        foto: "./fotos/María_Rodríguez_Palomo.png"
-    },
-    {
-        id: 33,
-        nombre: "Nerea Guillem Guillem",
-        falla: "Falla Barri de Sant Josep",
-        sector: "Sector Algirós", 
-        notaEntrevista: 8.2,
-        hablaValenciano: true,
-        foto: "./fotos/Nerea_Guillem_Guillem.png"
-    },
-    {
-        id: 34,
-        nombre: "Ana Martínez Muñoz",
-        falla: "Falla Doctor Manuel Candela-Beatriz Tortosa",
-        sector: "Sector Algirós", 
-        notaEntrevista: 8.2,
-        hablaValenciano: true,
-        foto: "./fotos/Ana_Martínez_Muñoz.png"
-    },
-    {
-        id: 35,
-        nombre: "María Climent Lago",
-        falla: "Falla Lluís Oliag-Mariola-Granada",
-        sector: "Sector Quatre Carreres", 
-        notaEntrevista: 8.2,
-        hablaValenciano: true,
-        foto: "./fotos/María_Climent_Lago.png"
-    },
-    {
-        id: 36,
-        nombre: "Lucía Gómez Villaplana",
-        falla: "Falla Avinguda Pianista Martínez Carrasco-Eslida",
-        sector: "Sector Quatre Carreres", 
-        notaEntrevista: 8.2,
-        hablaValenciano: true,
-        foto: "./fotos/Lucía_Gómez_Villaplana.png"
-    },
-    {
-        id: 37,
-        nombre: "Arantxa Alonso Chuliá",
-        falla: "Falla Carrera de Sant Lluís-Rafael Albiñana",
-        sector: "Sector Quatre Carreres", 
-        notaEntrevista: 8.2,
-        hablaValenciano: true,
-        foto: "./fotos/Arantxa_Alonso_Chuliá.png"
-    },
-    {
-        id: 38,
-        nombre: "Beatriz Blanco Tamarit",
-        falla: "Falla Castelló-Sogorb",
-        sector: "Sector Russafa B", 
-        notaEntrevista: 8.2,
-        hablaValenciano: true,
-        foto: "./fotos/Beatriz_Blanco_Tamarit.png"
-    }
-];
-
-const dbInfantiles = [
-    // Pega aquí las candidatas infantiles
-    {
-        id: 101,
-        nombre: "Natalia Roig Monzo",
-        falla: "Falla Avinguda Peris i Valero-Cuba",
-        sector: "Sector Russafa B",
-        notaEntrevista: 8.5,
-        hablaValenciano: true,
-        foto: "./fotos/FMI/Natalia_Roig_Monzo.png" 
-    },
-    {
-        id: 102, 
-        nombre: "Lorena Meléndez Simó",
-        falla: "Falla Sueca-Literat Azorín",
-        sector: "Sector Russafa B",
-        notaEntrevista: 8.5,
-        hablaValenciano: true,
-        foto: "./fotos/FMI/Lorena_Meléndez_Simó.png" 
-    },
-    {
-        id: 103, 
-        nombre: "Sofía Perea Gómez",
-        falla: "Falla Avinguda Pianista Martínez Carrasco-Eslida",
-        sector: "Sector Quatre Carreres",
-        notaEntrevista: 8.5,
-        hablaValenciano: true,
-        foto: "./fotos/FMI/Sofía_Perea_Gómez.png" 
-    },
-    {
-        id: 104, 
-        nombre: "Alejandra Coloma Rubio",
-        falla: "Falla Bisbe Jaume Pérez-Lluís Oliag",
-        sector: "Sector Quatre Carreres",
-        notaEntrevista: 8.5,
-        hablaValenciano: true,
-        foto: "./fotos/FMI/Alejandra_Coloma_Rubio.png" 
-    },
-    {
-        id: 105, 
-        nombre: "María Merchán Bernabé",
-        falla: "Falla Carrera de Malilla-Enginyer J. Benlloch",
-        sector: "Sector Quatre Carreres",
-        notaEntrevista: 8.5,
-        hablaValenciano: true,
-        foto: "./fotos/FMI/María_Merchán_Bernabé.png" 
-    },
-    {
-        id: 106, 
-        nombre: "Sofía Martínez Decornoy",
-        falla: "Falla Barri de Sant Josep",
-        sector: "Sector Algirós",
-        notaEntrevista: 8.5,
-        hablaValenciano: true,
-        foto: "./fotos/FMI/Sofía_Martínez_Decornoy.png" 
-    },
-    {
-        id: 107, 
-        nombre: "Inma Sánchez Agustí",
-        falla: "Falla Iecla-Cardenal Benlloch",
-        sector: "Sector Algirós",
-        notaEntrevista: 8.5,
-        hablaValenciano: true,
-        foto: "./fotos/FMI/Inma_Sánchez_Agustí.png" 
-    },
-    {
-        id: 108, 
-        nombre: "Carmen Alonso García",
-        falla: "Falla Avinguda Tarongers-Universitat Politècnica",
-        sector: "Sector Algirós",
-        notaEntrevista: 8.5,
-        hablaValenciano: true,
-        foto: "./fotos/FMI/Carmen_Alonso_García.png" 
-    },
-    {
-        id: 109, 
-        nombre: "Julia Vizcayno Orero",
-        falla: "Falla Rosari-Plaça Calabuig",
-        sector: "Sector Canyamelar - Grau - Natzaret",
-        notaEntrevista: 8.5,
-        hablaValenciano: true,
-        foto: "./fotos/FMI/Julia_Vizcayno_Orero.png" 
-    },
-    {
-        id: 110, 
-        nombre: "Marta Inés De La Peña Y De La Rosa",
-        falla: "Falla Major-Moraira-Natzaret",
-        sector: "Sector Canyamelar - Grau - Natzaret",
-        notaEntrevista: 8.5,
-        hablaValenciano: true,
-        foto: "./fotos/FMI/Marta_Inés_DeLaPeña_Y_DeLaRosa.png" 
-    },
-    {
-        id: 111, 
-        nombre: "Carla Traver Valero",
-        falla: "Falla Menorca-Lluís Bolinches",
-        sector: "Sector Canyamelar - Grau - Natzaret",
-        notaEntrevista: 8.5,
-        hablaValenciano: true,
-        foto: "./fotos/FMI/Carla_Traver_Valero.png" 
-    },
-    {
-        id: 112, 
-        nombre: "Martina García Cebrián",
-        falla: "Falla Plaça Lluís Cano",
-        sector: "Sector Benimàmet - Burjassot - Beniferri",
-        notaEntrevista: 8.5,
-        hablaValenciano: true,
-        foto: "./fotos/FMI/Martina_García_Cebrián.png" 
-    },
-    {
-        id: 113, 
-        nombre: "Daniella Samblas Benaches",
-        falla: "Falla Pi i Margall-Arturo Cervellera",
-        sector: "Sector Benimàmet - Burjassot - Beniferri",
-        notaEntrevista: 8.5,
-        hablaValenciano: true,
-        foto: "./fotos/FMI/Daniella_Samblas_Benaches.png" 
-    },
-    {
-        id: 114, 
-        nombre: "Julia Martos Pardo",
-        falla: "Falla Evarist Bas-Cullera",
-        sector: "Sector Benimàmet - Burjassot - Beniferri",
-        notaEntrevista: 8.5,
-        hablaValenciano: true,
-        foto: "./fotos/FMI/Julia_Martos_Pardo.png" 
-    },
-    {
-        id: 115, 
-        nombre: "Ariadna Fernández Zapata",
-        falla: "Falla Barri Quint-Pizarro",
-        sector: "Sector Mislata",
-        notaEntrevista: 8.5,
-        hablaValenciano: true,
-        foto: "./fotos/FMI/Ariadna_Fernández_Zapata.png" 
-    },
-    {
-        id: 116, 
-        nombre: "Carla Martínez Lluna",
-        falla: "Falla Felipe Bellver-Mare Ràfols",
-        sector: "Sector Mislata",
-        notaEntrevista: 8.5,
-        hablaValenciano: true,
-        foto: "./fotos/FMI/Carla_Martínez_Lluna.png" 
-    },
-    {
-        id: 117, 
-        nombre: "Macarena De La Osa Soler",
-        falla: "Falla Avinguda Regne de València-Ciscar",
-        sector: "Sector Pla del Remei - Gran Via",
-        notaEntrevista: 8.5,
-        hablaValenciano: true,
-        foto: "./fotos/FMI/Macarena_DeLa_Osa_Soler.png" 
-    },
-    {
-        id: 118, 
-        nombre: "Valeria Sordo Ferrero",
-        falla: "Falla Mestre Gozalbo-Comte d’Altea",
-        sector: "Sector Pla del Remei - Gran Via",
-        notaEntrevista: 8.5,
-        hablaValenciano: true,
-        foto: "./fotos/FMI/Valeria_Sordo_Ferrero.png" 
-    },
-    {
-        id: 119, 
-        nombre: "Alejandra Hernández Macián",
-        falla: "Falla Comte de Salvatierra-Ciril Amorós",
-        sector: "Sector Pla del Remei - Gran Via",
-        notaEntrevista: 8.5,
-        hablaValenciano: true,
-        foto: "./fotos/FMI/Alejandra_Hernández_Macián.png" 
-    },
-    {
-        id: 120, 
-        nombre: "Alma Ruedas García",
-        falla: "Falla Pius XII-Jaume Roig",
-        sector: "Sector Quart de Poblet - Xirivella",
-        notaEntrevista: 8.5,
-        hablaValenciano: true,
-        foto: "./fotos/FMI/Alma_Ruedas_García.png" 
-    },
-    {
-        id: 121, 
-        nombre: "María Catalá Martínez",
-        falla: "Falla Poeta Llorente",
-        sector: "Sector Quart de Poblet - Xirivella",
-        notaEntrevista: 8.5,
-        hablaValenciano: true,
-        foto: "./fotos/FMI/María_Catalá_Martínez.png" 
-    },
-    {
-        id: 122, 
-        nombre: "Júlia Grau Mayordomo",
-        falla: "Falla Mestre Serrano-Alacant",
-        sector: "Sector Quart de Poblet - Xirivella",
-        notaEntrevista: 8.5,
-        hablaValenciano: true,
-        foto: "./fotos/FMI/Júlia_Grau_Mayordomo.png" 
-    }
-    
-];
+const dbMayores = window.preseleccionesOficiales2027
+    .filter(candidata => candidata.tipo === 'mayores')
+    .map(({ tipo, ...candidata }) => candidata);
+const dbInfantiles = window.preseleccionesOficiales2027
+    .filter(candidata => candidata.tipo === 'infantiles')
+    .map(({ tipo, ...candidata }) => candidata);
 
 if (!Array.isArray(window.preseleccionesOficiales2027)) {
     throw new Error("No se ha podido cargar el catálogo oficial de preselecciones 2027.");
@@ -592,31 +51,19 @@ window.preseleccionesOficiales2027.forEach(candidataOficial => {
 // ================= VARIABLES DE ESTADO ================= //
 let usuarioActivo = null;
 let modoActual = 'mayores'; 
-let candidatasActivas = dbMayores; // Asegúrate de tener dbMayores y dbInfantiles declarados en tu código
+let candidatasActivas = dbMayores;
 let corteHonor = []; 
 let elegidaFinal = null; 
 let modoEleccion = false; 
 
-// ================= LÓGICA DE CAMBIO DE MODO ================= //
-function cambiarCategoria(nuevaCategoria) {
-    if (modoActual === nuevaCategoria) return; 
-    guardarEstado();
-    modoActual = nuevaCategoria;
-    candidatasActivas = (modoActual === 'mayores') ? dbMayores : dbInfantiles;
+// Estado y caché para "Ver tu quiniela"
+let quinielaModalActual = null;
+let categoriaModalQuiniela = 'mayores';
+let cacheQuinielasUsuario = { mayores: null, infantiles: null };
 
-    document.documentElement.style.setProperty('--color-tema', modoActual === 'mayores' ? '#800020' : '#0077b6');
-    document.getElementById('titulo-app').textContent = modoActual === 'mayores' ? 'Probabilidad FMV 2027' : 'Probabilidad FMIV 2027';
-    document.getElementById('texto-corte').textContent = modoActual === 'mayores' ? 'Corte de Honor' : 'Corte de Honor Infantil';
-    document.getElementById('titulo-fmv').textContent = modoActual === 'mayores' ? 'Fallera Mayor de Valencia' : 'Fallera Mayor Infantil de Valencia';
-
-    document.getElementById('btn-mayores').classList.toggle('activo', modoActual === 'mayores');
-    document.getElementById('btn-infantiles').classList.toggle('activo', modoActual === 'infantiles');
-
-    cargarEstado();
-    inicializarFiltros();
-    document.getElementById('buscador').value = ''; 
-    actualizarCuadroEleccion();
-    renderizarTarjetas();
+function obtenerCandidataPorId(id) {
+    if (!window.preseleccionesOficiales2027) return null;
+    return window.preseleccionesOficiales2027.find(c => c.id === id) || null;
 }
 
 // ================= FUNCIONES DE AUTENTICACIÓN ================= //
@@ -655,6 +102,7 @@ async function login() {
     } else {
         usuarioActivo = data.user;
         actualizarInterfazAuth();
+        precargarQuinielasUsuario();
         alert("Bienvenido, sesión iniciada.");
     }
 }
@@ -662,6 +110,9 @@ async function login() {
 async function logout() {
     await clienteSupabase.auth.signOut();
     usuarioActivo = null;
+    cacheQuinielasUsuario = { mayores: null, infantiles: null };
+    quinielaModalActual = null;
+    cerrarModalMiQuiniela();
     actualizarInterfazAuth();
 }
 
@@ -686,6 +137,7 @@ async function revisarSesion() {
     if (session) {
         usuarioActivo = session.user;
         actualizarInterfazAuth();
+        precargarQuinielasUsuario();
     }
 }
 
@@ -714,8 +166,334 @@ async function guardarQuinielaEnNube() {
     if (error) {
         alert("No se pudo guardar: " + error.message);
     } else {
-        alert("¡Tu quiniela oficial ha sido guardada en la base de datos de la comisión!");
+        cacheQuinielasUsuario[modoActual] = {
+            user_id: usuarioActivo.id,
+            user_email: usuarioActivo.email,
+            tipo: modoActual,
+            corte: [...corteHonor],
+            elegida_final: elegidaFinal
+        };
+        alert("¡Tu quiniela oficial ha sido guardada en la base de datos de la comisión!\n\nPuedes consultarla cuando quieras desde el botón 'Ver tu quiniela'.");
     }
+}
+
+// ================= SISTEMA "VER TU QUINIELA" ================= //
+
+async function precargarQuinielasUsuario() {
+    if (!usuarioActivo) return;
+    try {
+        const { data, error } = await clienteSupabase
+            .from('quinielas')
+            .select('*')
+            .eq('user_id', usuarioActivo.id);
+
+        if (!error && data) {
+            data.forEach(q => {
+                if (q.tipo) cacheQuinielasUsuario[q.tipo] = q;
+            });
+        }
+    } catch (err) {
+        console.warn("No se pudieron precargar las quinielas del usuario:", err);
+    }
+}
+
+async function abrirModalMiQuiniela(categoria = null) {
+    if (!usuarioActivo) {
+        alert("Debes registrarte o iniciar sesión para poder ver tu quiniela guardada.");
+        const emailInput = document.getElementById('auth-email');
+        if (emailInput) {
+            emailInput.scrollIntoView({ behavior: 'smooth' });
+            emailInput.focus();
+        }
+        return;
+    }
+
+    const modal = document.getElementById('modal-mi-quiniela');
+    if (!modal) return;
+
+    categoriaModalQuiniela = categoria || modoActual;
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+
+    const titulo = document.getElementById('modal-quiniela-titulo');
+    if (titulo) titulo.textContent = '📋 Tu Quiniela Oficial';
+
+    const sub = document.getElementById('modal-quiniela-subtitulo');
+    if (sub) sub.textContent = `Usuario: ${usuarioActivo.email}`;
+
+    const tabs = document.querySelector('.modal-tabs');
+    if (tabs) tabs.style.display = 'flex';
+
+    actualizarTabsModalQuiniela();
+    await renderizarCuerpoModalQuiniela();
+}
+
+function cerrarModalMiQuiniela() {
+    const modal = document.getElementById('modal-mi-quiniela');
+    if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+    }
+}
+
+function cerrarModalSiFondo(event) {
+    if (event.target && event.target.id === 'modal-mi-quiniela') {
+        cerrarModalMiQuiniela();
+    }
+}
+
+window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        cerrarModalMiQuiniela();
+    }
+});
+
+async function cambiarTabModalQuiniela(nuevaCategoria) {
+    if (categoriaModalQuiniela === nuevaCategoria) return;
+    categoriaModalQuiniela = nuevaCategoria;
+    actualizarTabsModalQuiniela();
+    await renderizarCuerpoModalQuiniela();
+}
+
+function actualizarTabsModalQuiniela() {
+    const tabMayores = document.getElementById('modal-tab-mayores');
+    const tabInfantiles = document.getElementById('modal-tab-infantiles');
+    if (tabMayores) tabMayores.classList.toggle('activo', categoriaModalQuiniela === 'mayores');
+    if (tabInfantiles) tabInfantiles.classList.toggle('activo', categoriaModalQuiniela === 'infantiles');
+}
+
+async function renderizarCuerpoModalQuiniela() {
+    const contenedor = document.getElementById('modal-quiniela-cuerpo');
+    const btnCargar = document.getElementById('btn-modal-cargar-tablero');
+    const btnCompartir = document.getElementById('btn-modal-compartir');
+
+    if (btnCargar) btnCargar.style.display = 'none';
+    if (btnCompartir) btnCompartir.style.display = 'none';
+
+    contenedor.innerHTML = `
+        <div class="modal-cargando">
+            <div class="spinner"></div>
+            <p>Consultando tu quiniela oficial de ${categoriaModalQuiniela === 'mayores' ? 'Mayores' : 'Infantiles'}...</p>
+        </div>
+    `;
+
+    let quiniela = cacheQuinielasUsuario[categoriaModalQuiniela];
+
+    if (!quiniela) {
+        const { data, error } = await clienteSupabase
+            .from('quinielas')
+            .select('*')
+            .eq('user_id', usuarioActivo.id)
+            .eq('tipo', categoriaModalQuiniela)
+            .maybeSingle();
+
+        if (error) {
+            contenedor.innerHTML = `
+                <div class="quiniela-vacia">
+                    <p style="color: red;">Error al consultar la quiniela: ${error.message}</p>
+                    <button onclick="renderizarCuerpoModalQuiniela()" class="btn-crear-quiniela">Reintentar</button>
+                </div>
+            `;
+            return;
+        }
+
+        quiniela = data;
+        if (quiniela) {
+            cacheQuinielasUsuario[categoriaModalQuiniela] = quiniela;
+        }
+    }
+
+    quinielaModalActual = quiniela;
+
+    if (!quiniela || !quiniela.corte || quiniela.corte.length === 0) {
+        const nombreCat = categoriaModalQuiniela === 'mayores' ? 'Mayores' : 'Infantiles';
+        contenedor.innerHTML = `
+            <div class="quiniela-vacia">
+                <div class="icono-vacio">📝</div>
+                <h3>No tienes quiniela registrada para ${nombreCat}</h3>
+                <p>Aún no has guardado tu selección oficial de 13 candidatas en la base de datos.</p>
+                <button onclick="irACrearQuiniela('${categoriaModalQuiniela}')" class="btn-crear-quiniela">
+                    Hacer mi quiniela de ${nombreCat} ahora
+                </button>
+            </div>
+        `;
+        return;
+    }
+
+    renderizarCuerpoConDatos(quiniela, true);
+}
+
+function renderizarCuerpoConDatos(quiniela, esPropia = true) {
+    const contenedor = document.getElementById('modal-quiniela-cuerpo');
+    const btnCargar = document.getElementById('btn-modal-cargar-tablero');
+    const btnCompartir = document.getElementById('btn-modal-compartir');
+
+    if (btnCargar) btnCargar.style.display = 'inline-block';
+    if (btnCompartir) btnCompartir.style.display = 'inline-block';
+
+    const esMayores = (quiniela.tipo || categoriaModalQuiniela) === 'mayores';
+    const tituloFM = esMayores ? 'Fallera Mayor de Valencia' : 'Fallera Mayor Infantil de Valencia';
+    const elegidaId = quiniela.elegida_final;
+    const candidataFM = elegidaId ? obtenerCandidataPorId(elegidaId) : null;
+
+    let html = '';
+
+    // 1. Tarjeta destacada de Fallera Mayor
+    html += `
+        <div class="quiniela-seccion-fmv">
+            <span class="quiniela-fmv-badge">👑 ${tituloFM}</span>
+    `;
+
+    if (candidataFM) {
+        html += `
+            <div class="quiniela-fmv-card">
+                <img class="quiniela-fmv-foto" src="${candidataFM.foto}" alt="${candidataFM.nombre}" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'100%\\' height=\\'100%\\'><rect width=\\'100%\\' height=\\'100%\\' fill=\\'%23ccc\\'/></svg>'">
+                <div class="quiniela-fmv-detalles">
+                    <h3 class="quiniela-fmv-nombre">${candidataFM.nombre}</h3>
+                    <p class="quiniela-fmv-falla">${candidataFM.falla}</p>
+                    <p class="quiniela-fmv-sector">Sector: ${candidataFM.sector}</p>
+                </div>
+            </div>
+        `;
+    } else {
+        html += `
+            <p style="color: #666; margin: 10px 0;">No especificaste Fallera Mayor para esta quiniela (solo Corte de Honor).</p>
+        `;
+    }
+    html += `</div>`;
+
+    // 2. Cuadrícula de la Corte de Honor
+    const totalCandidatas = (quiniela.corte || []).length;
+    html += `
+        <div class="quiniela-seccion-corte">
+            <h3>
+                <span>👑 Corte de Honor</span>
+                <span style="font-size: 0.9rem; color: #666; font-weight: normal;">(${totalCandidatas} candidatas seleccionadas)</span>
+            </h3>
+            <div class="quiniela-corte-grid">
+    `;
+
+    (quiniela.corte || []).forEach(id => {
+        const c = obtenerCandidataPorId(id);
+        if (!c) return;
+
+        const esLaFM = elegidaId === c.id;
+        html += `
+            <div class="quiniela-candidata-card ${esLaFM ? 'es-fmv' : ''}">
+                ${esLaFM ? `<span class="quiniela-tag-fmv">👑 ${esMayores ? 'FMV' : 'FMIV'}</span>` : ''}
+                <img class="quiniela-candidata-foto" src="${c.foto}" alt="${c.nombre}" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'100%\\' height=\\'100%\\'><rect width=\\'100%\\' height=\\'100%\\' fill=\\'%23ccc\\'/></svg>'">
+                <div class="quiniela-candidata-info">
+                    <div class="quiniela-candidata-nombre" title="${c.nombre}">${c.nombre}</div>
+                    <div class="quiniela-candidata-falla" title="${c.falla}">${c.falla}</div>
+                    <div class="quiniela-candidata-sector">Sector: ${c.sector}</div>
+                </div>
+            </div>
+        `;
+    });
+
+    html += `
+            </div>
+        </div>
+    `;
+
+    contenedor.innerHTML = html;
+}
+
+function irACrearQuiniela(categoria) {
+    cerrarModalMiQuiniela();
+    if (modoActual !== categoria) {
+        cambiarCategoria(categoria);
+    }
+    if (!modoEleccion) {
+        toggleModoEleccion();
+    }
+    const zona = document.getElementById('zona-eleccion');
+    if (zona) {
+        zona.scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
+function cargarQuinielaEnTableroDesdeModal() {
+    if (!quinielaModalActual || !quinielaModalActual.corte) return;
+
+    const tipoQuiniela = quinielaModalActual.tipo || categoriaModalQuiniela;
+    if (modoActual !== tipoQuiniela) {
+        cambiarCategoria(tipoQuiniela);
+    }
+
+    corteHonor = [...quinielaModalActual.corte];
+    elegidaFinal = quinielaModalActual.elegida_final || null;
+
+    guardarEstado();
+    actualizarCuadroEleccion();
+    renderizarTarjetas();
+
+    if (!modoEleccion) {
+        toggleModoEleccion();
+    }
+
+    cerrarModalMiQuiniela();
+
+    const zona = document.getElementById('zona-eleccion');
+    if (zona) {
+        zona.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    alert(`¡Tu quiniela oficial de ${tipoQuiniela === 'mayores' ? 'Mayores' : 'Infantiles'} se ha cargado en el tablero!`);
+}
+
+function compartirWhatsAppDesdeModal() {
+    if (!quinielaModalActual || !quinielaModalActual.corte) return;
+
+    const tipoQuiniela = quinielaModalActual.tipo || categoriaModalQuiniela;
+    const esMayores = tipoQuiniela === 'mayores';
+    const etiquetaRango = esMayores ? 'FMV' : 'FMIV';
+    let texto = `👑 *Mi Quiniela Oficial para ${etiquetaRango} 2027* 👑\n\n*Corte de Honor:*\n`;
+
+    quinielaModalActual.corte.forEach(id => {
+        const c = obtenerCandidataPorId(id);
+        if (c && quinielaModalActual.elegida_final !== id) {
+            texto += `➖ ${c.nombre} (${c.falla})\n`;
+        }
+    });
+
+    if (quinielaModalActual.elegida_final) {
+        const cFinal = obtenerCandidataPorId(quinielaModalActual.elegida_final);
+        if (cFinal) {
+            const tituloGran = esMayores ? 'FALLERA MAYOR DE VALENCIA' : 'FALLERA MAYOR INFANTIL DE VALENCIA';
+            texto += `\n🔥 *${tituloGran}:*\n✨ ${cFinal.nombre} (${cFinal.falla}) ✨\n`;
+        }
+    }
+
+    texto += `\n📍 #FallaMinistro #${etiquetaRango}2027`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`, '_blank');
+}
+
+function verQuinielaUsuarioRanking(email, usuario, corte, elegidaFinal) {
+    const modal = document.getElementById('modal-mi-quiniela');
+    if (!modal) return;
+
+    categoriaModalQuiniela = modoActual;
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+
+    const titulo = document.getElementById('modal-quiniela-titulo');
+    if (titulo) titulo.textContent = `📋 Quiniela de ${usuario}`;
+
+    const sub = document.getElementById('modal-quiniela-subtitulo');
+    if (sub) sub.textContent = `Email: ${email} | Categoría: ${modoActual === 'mayores' ? 'Mayores' : 'Infantiles'}`;
+
+    const tabs = document.querySelector('.modal-tabs');
+    if (tabs) tabs.style.display = 'none';
+
+    quinielaModalActual = {
+        user_email: email,
+        tipo: modoActual,
+        corte: corte,
+        elegida_final: elegidaFinal
+    };
+
+    renderizarCuerpoConDatos(quinielaModalActual, false);
 }
 
 
@@ -772,7 +550,6 @@ function calcularPesos() {
     let pesoTotal = 0;
     candidatasActivas.forEach(c => {
         let peso = c.notaEntrevista;
-        if (c.hablaValenciano) peso += 2.0; 
         c.pesoAsignado = peso;
         pesoTotal += peso;
     });
@@ -1083,7 +860,7 @@ async function cargarRanking() {
         let puntos = 0;
         
         // Sumar 1 punto por cada acierto en la Corte
-        if (oficial.corte.length > 0) {
+        if (oficial.corte.length > 0 && Array.isArray(q.corte)) {
             q.corte.forEach(id => {
                 if (oficial.corte.includes(id)) puntos += 1;
             });
@@ -1095,8 +872,11 @@ async function cargarRanking() {
         }
 
         return {
-            usuario: q.user_email.split('@')[0], // Mostrar solo la primera parte del email por privacidad
-            puntos: puntos
+            email: q.user_email || '',
+            usuario: q.user_email ? q.user_email.split('@')[0] : 'Anónimo',
+            puntos: puntos,
+            corte: Array.isArray(q.corte) ? q.corte : [],
+            elegida_final: q.elegida_final || null
         };
     });
 
@@ -1111,6 +891,7 @@ async function cargarRanking() {
                     <th>Posición</th>
                     <th>Fallero/a</th>
                     <th>Puntuación</th>
+                    <th>Elecciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -1122,11 +903,23 @@ async function cargarRanking() {
         if (index === 1) medalla = '🥈';
         if (index === 2) medalla = '🥉';
 
+        const esMiUsuario = usuarioActivo && r.email && r.email.toLowerCase() === usuarioActivo.email.toLowerCase();
+        const jsonCorte = JSON.stringify(r.corte).replace(/"/g, '&quot;');
+        const elegidaParam = r.elegida_final !== null ? r.elegida_final : 'null';
+
         htmlTabla += `
-            <tr>
+            <tr style="${esMiUsuario ? 'background-color: #fff9e6; font-weight: 500;' : ''}">
                 <td style="font-weight:bold; font-size:1.2rem;">${medalla}</td>
-                <td>${r.usuario}</td>
+                <td>
+                    ${r.usuario}
+                    ${esMiUsuario ? '<span style="background: var(--dorado); color: var(--color-tema); font-size: 0.75rem; padding: 2px 7px; border-radius: 10px; margin-left: 6px; font-weight: bold;">Tú</span>' : ''}
+                </td>
                 <td style="font-weight:bold; color:var(--color-tema);">${r.puntos} pts</td>
+                <td>
+                    <button class="btn-ver-quiniela" onclick="verQuinielaUsuarioRanking('${r.email}', '${r.usuario}', ${jsonCorte}, ${elegidaParam})" style="padding: 5px 12px; font-size: 0.85rem; border-radius: 6px; cursor: pointer;">
+                        👁️ Ver elecciones
+                    </button>
+                </td>
             </tr>
         `;
     });
