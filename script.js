@@ -15,6 +15,39 @@ const dbInfantiles = window.preseleccionesOficiales2027
     .filter(candidata => candidata.tipo === 'infantiles')
     .map(({ tipo, ...candidata }) => candidata);
 
+if (!Array.isArray(window.preseleccionesOficiales2027)) {
+    throw new Error("No se ha podido cargar el catálogo oficial de preselecciones 2027.");
+}
+
+const candidatasExistentes = new Map(
+    [...dbMayores, ...dbInfantiles].map(candidata => [candidata.nombre, candidata])
+);
+let siguienteId = Math.max(...[...dbMayores, ...dbInfantiles].map(candidata => candidata.id)) + 1;
+
+window.preseleccionesOficiales2027.forEach(candidataOficial => {
+    const candidataExistente = candidatasExistentes.get(candidataOficial.nombre);
+    if (candidataExistente) {
+        candidataExistente.foto = candidataOficial.foto;
+        return;
+    }
+
+    const candidata = {
+        id: siguienteId++,
+        nombre: candidataOficial.nombre,
+        falla: candidataOficial.falla,
+        sector: candidataOficial.sector,
+        notaEntrevista: candidataOficial.tipo === 'mayores' ? 8.2 : 8.5,
+        hablaValenciano: candidataOficial.tipo === 'mayores',
+        foto: candidataOficial.foto
+    };
+
+    if (candidataOficial.tipo === 'mayores') {
+        dbMayores.push(candidata);
+    } else {
+        dbInfantiles.push(candidata);
+    }
+});
+
 // ================= VARIABLES DE ESTADO ================= //
 let usuarioActivo = null;
 let modoActual = 'mayores'; 
